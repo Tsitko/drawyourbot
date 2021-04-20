@@ -1,0 +1,1 @@
+%block_name%(query, update)
