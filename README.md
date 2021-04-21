@@ -3,6 +3,7 @@
 Contents:  
 
 - [Draw your bot](#draw-your-bot)  
+    - [Install requirements](#install-requirements)
     - [Registering a telegram bot](#registering-a-telegram-bot)
     - [Draw bot](#drawing-a-bot)
         - [Start point](#start-point)
@@ -29,9 +30,15 @@ This project will be most useful for those who need to make simple support or su
 It could also save some time for those who are building really complex bots. In that cases generated bot can be
 just a start point.
 
-
+## Install requirements
+First you need to install requirements from requirements.txt.  
+The only requirement is python-telegram-bot library.  
+To install the requirements just use the following command:  
+```
+python -m pip install -r requirements.txt --user
+```
 ## Registering a telegram bot
-First you need to register your bot in telegram and get its token. You can register your bot using /newbot command in
+Now you need to register your bot in telegram and get its token. You can register your bot using /newbot command in
 [botfather](https://t.me/botfather) telegram bot.  
 [Here are the instructions](https://core.telegram.org/bots#6-botfather)
 
