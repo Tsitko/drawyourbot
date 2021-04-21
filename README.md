@@ -152,8 +152,8 @@ check users answers to those blocks).
 Saves all users answers into file.  
 Takes *answers* keyword and the name of the file where it should save answers. 
 # Examples
-To generate a bot from drawio file in **examples** folder you need to open it and change "bot_token" on start point to your
-bots token.  
+To generate a bot from drawio file in **examples** folder you need to open it in draw.io and change "bot_token" on start point to your
+[bots token](#registering-a-telegram-bot).  
 After that just use the following command:  
 ```
 python drawyourbot.py examples/drawio_file_name.drawio
