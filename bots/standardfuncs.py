@@ -11,6 +11,9 @@ def save_answers(data, *args):
     log_name = args[0]
     for key in data.keys():
         message += str(key) + ': ' + str(data[key]) + '\n'
-    with open(log_name, 'a') as file:
-        file.write(message + '\n\n')
-    return True
+    try:
+        with open(log_name, 'a') as file:
+            file.write(message + '\n\n')
+        return True
+    except:
+        return False
