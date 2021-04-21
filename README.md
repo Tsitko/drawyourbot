@@ -22,6 +22,7 @@ Contents:
 - [Standard functions](#standard-functions)
     - [contains](#contains)
     - [save_answers](#save_answers)
+- [Examples](#examples)
 
 # Draw your bot
 Draw your bot is an open sourced project made to let people construct chat bots without coding or with minimal coding.
@@ -150,3 +151,14 @@ check users answers to those blocks).
 ## save_answers
 Saves all users answers into file.  
 Takes *answers* keyword and the name of the file where it should save answers. 
+# Examples
+To generate a bot from drawio file in **examples** folder you need to open it and change "bot_token" on start point to your
+bots token.  
+After that just use the following command:  
+```
+python drawyourbot.py examples/drawio_file_name.drawio
+```
+Your bot will be saved into **bots**. You can run it with the following command:  
+```
+python bots/drawio_file_name.py
+```
