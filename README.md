@@ -1,6 +1,6 @@
 # README ![start point](images/drawyourbot_small.png)  
 
-![project demo](project_demo.mp4)
+![project demo](project_demo.gif)
 
 Contents:  
 
