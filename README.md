@@ -1,4 +1,4 @@
-# README
+# README ![start point](images/drawyourbot_small.png)  
 
 Contents:  
 
