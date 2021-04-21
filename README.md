@@ -1,5 +1,7 @@
 # README ![start point](images/drawyourbot_small.png)  
 
+![project demo](project_demo.mp4)
+
 Contents:  
 
 - [Draw your bot](#draw-your-bot)  
