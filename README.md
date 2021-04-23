@@ -25,6 +25,8 @@ Contents:
     - [contains](#contains)
     - [save_answers](#save_answers)
 - [Examples](#examples)
+- [New features](#new-features)
+- [Upcoming features](#upcoming-features)
 
 # Draw your bot
 Draw your bot is an open sourced project made to let people construct chat bots without coding or with minimal coding.
@@ -164,3 +166,8 @@ Your bot will be saved into **bots**. You can run it with the following command:
 ```
 python bots/drawio_file_name.py
 ```
+# New features
+Now you can save users answers to a document using save_answers standard function.
+# Upcoming features
+- Using user answers into message blocks
+- New type of functions with string outcome (now only True and False outcomes available)
