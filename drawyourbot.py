@@ -38,17 +38,27 @@ class BotCode(object):
 
     def make_message(self, message, indent, inline=False):
         code_part = ''
+        label = make_string(message.label)
+        for name in self.BS.block_names:
+            if not inline:
+                if '__' + str(name) + '__' in label:
+                    label = label.replace('__' + str(name) + '__', '\" + str(answers[bot.message.chat_id]'
+                                                                   '[\"' + str(name) + '\"]) + \"')
+            else:
+                if '__' + str(name) + '__' in label:
+                    label = label.replace('__' + str(name) + '__', '\" + str(answers[query.message.chat_id]'
+                                                                   '[\"' + str(name) + '\"]) + \"')
         if message.name is None:
             if not inline:
                 with open('templates/message.py', 'r') as file:
                     code_part += indent
                     code_part += file.read()
-                code_part = code_part.replace('%message_text%', make_string(message.label))
+                code_part = code_part.replace('%message_text%', label)
             else:
                 with open('templates/message_inline.py', 'r') as file:
                     code_part += indent
                     code_part += file.read()
-                code_part = code_part.replace('%message_text%', make_string(message.label))
+                code_part = code_part.replace('%message_text%', label)
         else:
             if not inline:
                 with open('templates/message_with_name.py', 'r') as file:
@@ -56,14 +66,14 @@ class BotCode(object):
                 for line in tmp.split('\n'):
                     code_part += indent + line + '\n'
                 code_part = code_part[:-1]
-                code_part = code_part.replace('%message_text%', make_string(message.label))
+                code_part = code_part.replace('%message_text%', label)
             else:
                 with open('templates/message_with_name_inline.py', 'r') as file:
                     tmp = file.read()
                 for line in tmp.split('\n'):
                     code_part += indent + line + '\n'
                 code_part = code_part[:-1]
-                code_part = code_part.replace('%message_text%', make_string(message.label))
+                code_part = code_part.replace('%message_text%', label)
             code_part = code_part.replace('%block_name%', message.name)
         return code_part
 
@@ -118,12 +128,14 @@ class BotCode(object):
                 if ',' in element.function_args:
                     if str(element.function_args.split(',')[0]) in names:
                         name = str(element.function_args.split(',')[0])
-                        element.function_args = element.function_args.replace(name, 'answers[bot.message.chat_id][\"' + str(name) + '\"]')
+                        element.function_args = element.function_args.replace(name, 'answers[bot.message.chat_id]'
+                                                                                    '[\"' + str(name) + '\"]')
                     element.function_args = element.function_args.replace('answers,', 'answers[bot.message.chat_id],')
                 else:
                     if str(element.function_args) in names:
                         name = str(element.function_args)
-                        element.function_args = element.function_args.replace(name, 'answers[bot.message.chat_id][\"' + str(name) + '\"]')
+                        element.function_args = element.function_args.replace(name, 'answers[bot.message.chat_id]'
+                                                                                    '[\"' + str(name) + '\"]')
                     element.function_args = element.function_args.replace('answers', 'answers[bot.message.chat_id]')
             template = template.replace('%function_args%', element.function_args)
             template = template.replace('%next_blocks_true%', next_blocks_true)
@@ -155,7 +167,8 @@ class BotCode(object):
                 with open('templates/text_handlers.py') as file:
                     template = file.read()
                 template = template.replace('%block_name%', element.name)
-                template = template.replace('%get_answer%', '        answers[bot.message.chat_id][last_question[bot.message.chat_id]] = bot.message.text')
+                template = template.replace('%get_answer%', '        answers[bot.message.chat_id]'
+                                                            '[last_question[bot.message.chat_id]] = bot.message.text')
                 template = template.replace('%next_blocks%', self.build_chain(self.get_chain(element.arrow),
                                                                               indent='        ', inline=False))
                 code_part += template

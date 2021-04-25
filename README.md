@@ -58,6 +58,8 @@ There are two types of messages: with name (that message will wait for users ans
 answer in your [functions blocks](#functions-block) and without name (that is just a text message which bot will print out).
 Both are drawing as rectangle and should not have more when one outgoing arrow. Name of the message should be in
  square brackets at the beginning of blocks label.
+You can use users answers in your message blocks. To use the answer, you need to add \_\_block name\_\_ into your 
+message block (the example is an echo_bot in examples folder).  
 Message with name example:  
 ![message with name](images/message_with_name.png)  
 
@@ -167,7 +169,7 @@ Your bot will be saved into **bots**. You can run it with the following command:
 python bots/drawio_file_name.py
 ```
 # New features
-Now you can save users answers to a document using save_answers standard function.
+Now you can use user answers into message blocks
 # Upcoming features
-- Using user answers into message blocks
 - New type of functions with string outcome (now only True and False outcomes available)
+- New standard function to search through md documents
