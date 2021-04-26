@@ -85,6 +85,12 @@ class FunctionsBlock(object):
         self.type = 'functions block'
         self.name = self.label.split('_functions_')[1].split('(')[0]
         self.name = self.name.replace('::', '_')
+        if '[' in self.label and ']' in self.label:
+            self.special_name = self.label.split('[')[1].split(']')[0]
+            self.label = self.label.replace('[' + str(self.name) + ']', '')
+            self.special_name = make_names(self.special_name)
+        else:
+            self.special_name = None
 
 
 class BotStructure(object):
@@ -211,7 +217,10 @@ class BotStructure(object):
     def get_functions_blocks(self):
         for element in self.root.iter('mxCell'):
             if self.get_style(element) == 'functions block':
-                self.functions_blocks.append(FunctionsBlock(element))
+                function_block = FunctionsBlock(element)
+                if function_block.special_name is not None:
+                    self.block_names.append(function_block.special_name)
+                self.functions_blocks.append(function_block)
 
     def get_functions_blocks_arrows(self):
         for j in range(len(self.arrows)):
@@ -219,7 +228,8 @@ class BotStructure(object):
                 if self.arrows[j].source == self.functions_blocks[i].id:
                     self.functions_blocks[i].arrows.append(self.arrows[j])
                     if self.arrows[j].label != 'True' and self.arrows[j].label != 'False':
-                        self.errors += 'You can use only False and True labeled arrows for you functions block\n'
+                        if self.arrows[j].label != '':
+                            self.errors += 'You can use only False and True labeled or non-labeled arrows for you functions block\n'
                 if self.arrows[j].target == self.functions_blocks[i].id:
                     self.arrows[j].target_element = self.functions_blocks[i]
         for i in range(len(self.functions_blocks)):

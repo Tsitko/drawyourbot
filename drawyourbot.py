@@ -119,10 +119,16 @@ class BotCode(object):
             if element.name is not None:
                 names.append(element.name)
         for element in self.BS.functions_blocks:
-            with open('templates/functions.py', 'r') as file:
-                template = file.read()
+            if len(element.arrows) == 2:
+                with open('templates/functions.py', 'r') as file:
+                    template = file.read()
+            if len(element.arrows) == 1:
+                with open('templates/functions_named.py', 'r') as file:
+                    template = file.read()
             next_blocks_true, next_blocks_false = self.build_functions_chain(element)
             template = template.replace('%block_name%', element.name)
+            if element.special_name is not None:
+                template = template.replace('%block_special_name%', element.special_name)
             template = template.replace('%function%', element.function)
             if len(element.function_args) > 0:
                 if ',' in element.function_args:
@@ -140,7 +146,10 @@ class BotCode(object):
             template = template.replace('%function_args%', element.function_args)
             template = template.replace('%next_blocks_true%', next_blocks_true)
             template = template.replace('%next_blocks_false%', next_blocks_false)
-            code_part += template + '\n'
+            if len(element.arrows) == 1:
+                code_part += template + str(self.build_chain(self.get_chain(element.arrows[0]), indent='    ', inline=False)) + '\n'
+            else:
+                code_part += template + '\n'
         self.code = self.code.replace('%functions_blocks_functions%', code_part)
 
     def set_first_blocks(self):

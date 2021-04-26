@@ -1,5 +1,7 @@
 # README ![start point](images/drawyourbot_small.png)  
 
+[support bot](https://t.me/drawyourbot_support_bot)
+
 ![project demo](project_demo.gif)
 
 Contents:  
@@ -24,20 +26,25 @@ Contents:
 - [Standard functions](#standard-functions)
     - [contains](#contains)
     - [save_answers](#save_answers)
+    - [search_md](#search_md)
 - [Examples](#examples)
 - [New features](#new-features)
 - [Upcoming features](#upcoming-features)
 
 # Draw your bot
 Draw your bot is an open sourced project made to let people construct chat bots without coding or with minimal coding.
-You can just draw your chat bot logic in draw.io and generate its code.  
+You can just draw your chat bot logic in draw.io (http://diagrams.net/) and generate its code.  
 This project will be most useful for those who need to make simple support or survey bot.  
 It could also save some time for those who are building really complex bots. In that cases generated bot can be
 just a start point.
 
 ## Install requirements
 First you need to install requirements from requirements.txt.  
-The only requirement is python-telegram-bot library.  
+The requirements are:
+- python-telegram-bot library
+- beautifulsoup4 library
+- requests library
+
 To install the requirements just use the following command:  
 ```
 python -m pip install -r requirements.txt --user
@@ -75,16 +82,22 @@ And in your bot like that:
 ![single choice in bot](images/single_choice_in_bot.png)    
 ### Functions block
 You can use functions in your bot. There are some useful functions in standardfuncs.py and you can make your own file
-with functions.  
-All functions should have exactly two outcomes: True and False.  
+with functions. You can use functions with a name or without (if you want functions return in your messages, 
+you should give the name to your function).  
+To give the name to your functions block you need to write that name in square brackets in the beginning of your 
+function block.
+All functions should have exactly two outcomes: True and False or exactly one unlabeled outcome 
+(only for functions with names).  
 You can use answers to your named message blocks and single choice blocks by providing blocks name to functions and
 you can use all answers by providing *answers* keyword to your functions. And you can also use any other hardcoded 
 parameters (for strings you should use quotes).  
 Function should start with \_functions\_ keyword and contain the name of python file with your functions (without 
 extension) and function name with its parameters.  
 Example: \_functions\_fileWithFunctions::function(argument1, argument2, "string1", "string2")  
-In your draw it will looks like that:  
+In your draw functions block without a name will look like that:  
 ![functions block](images/functions_block.png)    
+The functions block with a name will look like that:  
+![functions block with name](images/functions_block_with_name.png)  
 ## Generating bot code
 To generate your bot code use the following command:  
 ```
@@ -157,9 +170,13 @@ check users answers to those blocks).
 ## save_answers
 Saves all users answers into file.  
 Takes *answers* keyword and the name of the file where it should save answers. 
+## search_md
+Searches for given as a first argument string in given as a second argument md file (needs a link to md in github) and 
+returns a link to the most suitable section of that md.  
+The example is support_md.drawio in examples folder.
 # Examples
-To generate a bot from drawio file in **examples** folder you need to open it in draw.io and change "bot_token" on start point to your
-[bots token](#registering-a-telegram-bot).  
+To generate a bot from drawio file in **examples** folder you need to open it in draw.io and change "bot_token" on 
+start point to your [bots token](#registering-a-telegram-bot).  
 After that just use the following command:  
 ```
 python drawyourbot.py examples/drawio_file_name.drawio
@@ -169,7 +186,9 @@ Your bot will be saved into **bots**. You can run it with the following command:
 python bots/drawio_file_name.py
 ```
 # New features
-Now you can use user answers into message blocks
-# Upcoming features
-- New type of functions with string outcome (now only True and False outcomes available)
+- New type of functions with string outcome (for now only True and False outcomes were available)
 - New standard function to search through md documents
+# Upcoming features
+- Using sqlite database in your bot
+- Use database queries in functions
+- Save user answers to database
