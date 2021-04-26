@@ -27,19 +27,30 @@ def search_md(*args):
     md_path = args[1]
     md = requests.get(md_path).content.decode()
     soup = BeautifulSoup(md, 'html.parser')
+    # get readme content
+    soup = soup.find_all('readme-toc')[0]
+    # get headers
     headers = []
-    for header in soup.find_all(["h1", "h2", "h3", "h4", "h5", "h6"]):
+    for header in soup.find_all(['h1', 'h2', 'h3', 'h4']):
         for content in header.contents:
             if '<' not in str(content):
                headers.append(content)
+    # find text
+    texts = []
+    for h1 in headers:
+        target = soup.find('a', id='user-content-' + str(h1.lower().replace(' ', '-')))
+        texts.append(str(target.find_next('p')))
+    # find the best block
     score = 0
     result = ''
-    for header in headers:
-        temp_score = 0
-        for word in query.split(' '):
-            if (word + ' ').lower() in header.lower():
-                temp_score += 1
-        if temp_score >= score:
-            score = temp_score
-            result = '#' + header.lower().replace(' ', '-')
+    if len(texts) == len(headers):
+        for i in range(len(headers)):
+            if texts[i] is not None and headers[i] is not None:
+                temp_score = 0
+                for word in query.split(' '):
+                    if str(word + ' ').lower() in texts[i].lower():
+                        temp_score += 1
+                if temp_score > score:
+                    score = temp_score
+                    result = '#' + headers[i].lower().replace(' ', '-')
     return md_path + result
