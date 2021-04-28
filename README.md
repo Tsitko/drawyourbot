@@ -1,6 +1,8 @@
 # README ![start point](images/drawyourbot_small.png)  
 
-[support bot](https://t.me/drawyourbot_support_bot)
+[support bot](https://t.me/drawyourbot_support_bot)  
+
+[project blog](https://denis-tsitko.medium.com/)
 
 ![project demo](project_demo.gif)
 
