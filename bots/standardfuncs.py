@@ -30,27 +30,26 @@ def search_md(*args):
     # get readme content
     soup = soup.find_all('readme-toc')[0]
     # get headers
-    headers = []
+    md_parts = {}
     for header in soup.find_all(['h1', 'h2', 'h3', 'h4']):
         for content in header.contents:
-            if '<' not in str(content):
-               headers.append(content)
+            if '<' not in str(content) and content is not None:
+               md_parts[content] = ''
     # find text
-    texts = []
-    for h1 in headers:
-        target = soup.find('a', id='user-content-' + str(h1.lower().replace(' ', '-')))
-        texts.append(str(target.find_next('p')))
+    for header in md_parts.keys():
+        target = soup.find('a', id='user-content-' + str(header.lower().replace(' ', '-')))
+        md_parts[header] = str(target.find_next('p'))
     # find the best block
     score = 0
     result = ''
-    if len(texts) == len(headers):
-        for i in range(len(headers)):
-            if texts[i] is not None and headers[i] is not None:
-                temp_score = 0
-                for word in query.split(' '):
-                    if str(word + ' ').lower() in texts[i].lower():
+    for header in md_parts.keys():
+        if md_parts[header] is not None:
+            temp_score = 0
+            for key_word in query.split(' '):
+                for word in md_parts[header].replace('.', '').lower().split(' '):
+                    if word == key_word:
                         temp_score += 1
-                if temp_score > score:
-                    score = temp_score
-                    result = '#' + headers[i].lower().replace(' ', '-')
+            if temp_score > score:
+                score = temp_score
+                result = '#' + header.lower().replace(' ', '-')
     return md_path + result
