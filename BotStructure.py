@@ -19,7 +19,17 @@ def make_label(strng):
     cleanr = re.compile('<.*?>')
     strng = strng.replace('&nbsp;', ' ')
     strng = strng.replace('&quot;', '\"')
-    strng= re.sub(cleanr, '', strng)
+    strng = re.sub(cleanr, '', strng)
+    if '__' in strng:
+        new_strng = ''
+        parts = strng.split('__')
+        for i in range(len(parts)):
+            if i%2 == 1:
+                parts[i] = make_names(parts[i])
+        for part in parts:
+            new_strng += part + '__'
+        new_strng = new_strng[:-2]
+        strng = new_strng
     return strng
 
 
@@ -93,6 +103,20 @@ class FunctionsBlock(object):
             self.special_name = None
 
 
+class File(object):
+    def __init__(self, element):
+        self.id = element.get('id')
+        self.label = make_label(element.get('value'))
+        if '\\' or '/' in self.label:
+            self.label = self.label.replace('\\', '/')
+            self.fname = self.label.split('/')[-1]
+        else:
+            self.fname = self.label
+        self.name = None
+        self.arrow = None
+        self.type = 'file'
+
+
 class BotStructure(object):
     def __init__(self, path):
         root = ET.parse(path).getroot()
@@ -106,6 +130,7 @@ class BotStructure(object):
         self.messages = []
         self.functions_blocks = []
         self.single_choice_blocks = []
+        self.files = []
         self.block_names = []
 
     def get_style(self, element):
@@ -121,11 +146,12 @@ class BotStructure(object):
                 return 'single choice'
             elif 'shape=process' in style:
                 return 'functions block'
+            elif 'shape=note' in style:
+                return 'file'
             else:
                 return 'message'
         else:
             return None
-
 
     def get_arrows(self):
         for element in self.root.iter('mxCell'):
@@ -148,6 +174,28 @@ class BotStructure(object):
         self.arrows = []
         self.get_arrows()
         self.set_arrow_labels()
+
+    def get_files(self):
+        for element in self.root.iter('mxCell'):
+            if self.get_style(element) == 'file':
+                self.files.append(File(element))
+                if self.files[-1].label == '':
+                    self.errors += 'One of your file blocks don\'t have path to file'
+
+    def get_files_arrows(self):
+        for i in range(len(self.files)):
+            for j in range(len(self.arrows)):
+                if self.arrows[j].source == self.files[i].id:
+                    if self.files[i].arrow is None:
+                        self.files[i].arrow = self.arrows[j]
+                    else:
+                        self.errors += 'One of your file block have more that one arrow'
+                if self.arrows[j].target == self.files[i].id:
+                    self.arrows[j].target_element = self.files[i]
+
+    def load_files(self):
+        self.get_files()
+        self.get_files_arrows()
 
     def get_start_point(self):
         for element in self.root.iter('mxCell'):
@@ -254,4 +302,5 @@ class BotStructure(object):
         self.load_messages()
         self.load_single_choices()
         self.load_functions_blocks()
+        self.load_files()
 

@@ -77,10 +77,38 @@ class BotCode(object):
             code_part = code_part.replace('%block_name%', message.name)
         return code_part
 
+    def make_file_message(self, element, indent, inline):
+        code_part = ''
+        for name in self.BS.block_names:
+            if '__' + str(name) + '__' in element.label:
+                if inline:
+                    element.label = element.label.replace('__' + str(name) + '__', 'answers[query.message.chat_id]')
+                    code_part = indent + 'if \'\\\\\' in answers[query.message.chat_id][\'' + str(name) + '\'] or \'/\' in answers[query.message.chat_id][name]:\n'
+                    code_part += indent + '    fname = answers[query.message.chat_id][name].replace(\'\\\\\', \'/\').split(\'/\')[-1]\n'
+                    code_part += indent + 'else:\n'
+                    code_part += indent + '    fname = answers[query.message.chat_id][\'' + str(name) + '\']\n'
+                    code_part += indent + 'with open({}, \'r\') as output: query.message.reply_document' \
+                                          '(document=output, filename={})\n'.format(element.label, 'fname')
+                else:
+                    element.label = element.label.replace('__' + str(name) + '__', 'answers[bot.message.chat_id][\'' + str(name) + '\']')
+                    code_part = indent + 'if \'\\\\\' in answers[bot.message.chat_id][\'' + str(name) + '\'] or \'/\' in answers[bot.message.chat_id][name]:\n'
+                    code_part += indent + '    fname = answers[bot.message.chat_id][\'' + str(name) + '\'].replace(\'\\\\\', \'/\').split(\'/\')[-1]\n'
+                    code_part += indent + 'else:\n'
+                    code_part += indent + '    fname = answers[bot.message.chat_id][\'' + str(name) + '\']\n'
+                    code_part += indent + 'with open({}, \'r\') as output: bot.message.reply_document' \
+                                         '(document=output, filename={})\n'.format(element.label, 'fname')
+        if code_part == '':
+            if inline:
+                code_part = indent + 'with open(\'{}\', \'r\') as output: query.message.reply_document' \
+                                      '(document=output, filename=\'{}\')\n'.format(element.label, element.fname)
+            else:
+                code_part = indent + 'with open(\'{}\', \'r\') as output: bot.message.reply_document' \
+                                          '(document=output, filename=\'{}\')\n'.format(element.label, element.fname)
+        return code_part
 
     def get_chain(self, arrow):
         chain = [arrow.target_element]
-        if chain[-1].type == 'message':
+        if chain[-1].type == 'message' or chain[-1].type == 'file':
             if chain[-1].arrow is not None:
                 while chain[-1].name is None and chain[-1].arrow is not None:
                     chain.append(chain[-1].arrow.target_element)
@@ -92,11 +120,15 @@ class BotCode(object):
             if inline:
                 if element.type == 'message':
                     code_part += self.make_message(element, indent, inline=True) +'\n'
+                elif element.type == 'file':
+                    code_part += self.make_file_message(element, indent, inline=True)
                 else:
                     code_part += indent + str(element.name) + '(query, update)' + '\n'
             else:
                 if element.type == 'message':
                     code_part += self.make_message(element, indent, inline=False) +'\n'
+                elif element.type == 'file':
+                    code_part += self.make_file_message(element, indent, inline=False)
                 else:
                     code_part += indent + str(element.name) + '(bot, update)' + '\n'
         return code_part

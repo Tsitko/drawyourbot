@@ -16,10 +16,12 @@ Contents:
         - [Message block](#message-block)
         - [Single choice block](#single-choice-block)
         - [Functions block](#functions-block)
+        - [File block](#file-block)
     - [Generating bot code](#generating-bot-code)  
 - [Custom classes](#custom-classes)
     - [Arrow](#arrow)
     - [Start](#start)
+    - [File](#file)
     - [Message](#message)
     - [SingleChoice](#singlechoice)
     - [FunctionsBlock](#functionsblock)
@@ -100,6 +102,14 @@ In your draw functions block without a name will look like that:
 ![functions block](images/functions_block.png)    
 The functions block with a name will look like that:  
 ![functions block with name](images/functions_block_with_name.png)  
+## File block
+You can send files to the user in your bot. To send a file, you need to use file block and provide a path to the file 
+as a label to that block.  
+In your bot structure it should look like that:  
+![file block](images/file_block.png)  
+You can use an outcome of your function block as a path to the file. For example if you have function block named 
+'File name' which returns a path to the file, you should use its name in your file block like this:  
+\_\_File name\_\_
 ## Generating bot code
 To generate your bot code use the following command:  
 ```
@@ -113,7 +123,7 @@ python path_to_your_bot_file
 # Custom classes
 ## Arrow
 Arrow is a class for arrows.  
-It have the following attributes:  
+It has the following attributes:  
 - id: string (arrow id)
 - source: string (source element id)
 - target: string (target element id)
@@ -121,13 +131,20 @@ It have the following attributes:
 - target_element: Message, SingleChoice or FunctionsBlock (the target element for the arrow)
 ## Start
 Start is a class for start point.  
-It have the following attributes:
+It has the following attributes:
 - id: string (start element id)
 - label: string (start element label, which should be your telegram bot token)
 - arrow: Arrow (start points outgoing arrow)
+## File
+File is a class for file blocks.
+It has the following attributes:
+- id: string (file block id)
+- label: string (path to file)
+- arrow: Arrow (outgoing arrow arrow)
+- fname: String (file name)
 ## Message
 Message is a class for message blocks.  
-It have the following attributes:
+It has the following attributes:
 - id: string (message block id)
 - label: string (message text)
 - name: string (message block name)
@@ -135,7 +152,7 @@ It have the following attributes:
 - type: string (always "message")
 ## SingleChoice
 SingleChoice is a class for single choice blocks.  
-It have the following attributes:
+It has the following attributes:
 - id: string (single choice block id)
 - label: string (single choice text)
 - name: string (single choice block name)
@@ -143,7 +160,7 @@ It have the following attributes:
 - type: string (always "single choice")
 ## FunctionsBlock
 FunctionsBlock is a class for functions blocks.  
-It have the following attributes:
+It has the following attributes:
 - id: string (functions block id)
 - library: string (file with function)
 - function: string (function with arguments)
@@ -153,11 +170,12 @@ It have the following attributes:
 - type: string (always "functions block")
 ## BotStructure
 BotStructure class is initializing with the path to drawio file and loads its structure.  
-It have the following attributes:
+It has the following attributes:
 - root: xml.etree.ElementTree (xml with bot structure)
 - errors: string (errors in bot structure drawio)
 - arrows: list of Arrow (arrows from drawio)
 - start: Start (start point)
+- files: list of File (block to send a file to user)  
 - messages: list of Message (message blocks)
 - functions_blocks: list of FunctionsBlock (function blocks)
 - single_choice_blocks: list of SingleChoice (single choice blocks)
@@ -188,9 +206,9 @@ Your bot will be saved into **bots**. You can run it with the following command:
 python bots/drawio_file_name.py
 ```
 # New features
-- New type of functions with string outcome (for now only True and False outcomes were available)
-- New standard function to search through md documents
+- Now you can send files to users (example of the bot to send a file: [simple_file.drawio](examples/simple_file.drawio)
+   in examples folder). 
+And you also can use custom functions to provide a file to send.
 # Upcoming features
-- Using sqlite database in your bot
-- Use database queries in functions
-- Save user answers to database
+- An example of using database queries in functions
+- An example of how to save user answers to database
