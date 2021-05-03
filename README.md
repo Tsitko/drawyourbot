@@ -1,5 +1,7 @@
 # README ![start point](images/drawyourbot_small.png)  
 
+contacts: denis.tsitko@gmail.com
+
 [support bot](https://t.me/drawyourbot_support_bot)  
 
 [project blog](https://denis-tsitko.medium.com/)
