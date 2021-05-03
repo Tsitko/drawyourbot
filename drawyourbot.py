@@ -83,18 +83,18 @@ class BotCode(object):
             if '__' + str(name) + '__' in element.label:
                 if inline:
                     element.label = element.label.replace('__' + str(name) + '__', 'answers[query.message.chat_id]')
-                    code_part = indent + 'if \'\\\\\' in answers[query.message.chat_id][\'' + str(name) + '\'] or \'/\' in answers[query.message.chat_id][name]:\n'
+                    code_part = indent + 'if \'\\\\\' in answers[query.message.chat_id][\"' + str(name) + '\"] or \'/\' in answers[query.message.chat_id][\"' + str(name) + '\"]:\n'
                     code_part += indent + '    fname = answers[query.message.chat_id][name].replace(\'\\\\\', \'/\').split(\'/\')[-1]\n'
                     code_part += indent + 'else:\n'
-                    code_part += indent + '    fname = answers[query.message.chat_id][\'' + str(name) + '\']\n'
+                    code_part += indent + '    fname = answers[query.message.chat_id][\"' + str(name) + '\"]\n'
                     code_part += indent + 'with open({}, \'r\') as output: query.message.reply_document' \
                                           '(document=output, filename={})\n'.format(element.label, 'fname')
                 else:
-                    element.label = element.label.replace('__' + str(name) + '__', 'answers[bot.message.chat_id][\'' + str(name) + '\']')
-                    code_part = indent + 'if \'\\\\\' in answers[bot.message.chat_id][\'' + str(name) + '\'] or \'/\' in answers[bot.message.chat_id][name]:\n'
-                    code_part += indent + '    fname = answers[bot.message.chat_id][\'' + str(name) + '\'].replace(\'\\\\\', \'/\').split(\'/\')[-1]\n'
+                    element.label = element.label.replace('__' + str(name) + '__', 'answers[bot.message.chat_id][\"' + str(name) + '\"]')
+                    code_part = indent + 'if \'\\\\\' in answers[bot.message.chat_id][\"' + str(name) + '\"] or \'/\' in answers[bot.message.chat_id][\"' + str(name) + '\"]:\n'
+                    code_part += indent + '    fname = answers[bot.message.chat_id][\"' + str(name) + '\"].replace(\'\\\\\', \'/\').split(\'/\')[-1]\n'
                     code_part += indent + 'else:\n'
-                    code_part += indent + '    fname = answers[bot.message.chat_id][\'' + str(name) + '\']\n'
+                    code_part += indent + '    fname = answers[bot.message.chat_id][\"' + str(name) + '\"]\n'
                     code_part += indent + 'with open({}, \'r\') as output: bot.message.reply_document' \
                                          '(document=output, filename={})\n'.format(element.label, 'fname')
         if code_part == '':
@@ -150,6 +150,9 @@ class BotCode(object):
         for element in self.BS.messages:
             if element.name is not None:
                 names.append(element.name)
+        for element in self.BS.single_choice_blocks:
+            if element.name is not None:
+                names.append(element.name)
         for element in self.BS.functions_blocks:
             if len(element.arrows) == 2:
                 with open('templates/functions.py', 'r') as file:
@@ -172,7 +175,7 @@ class BotCode(object):
                 else:
                     if str(element.function_args) in names:
                         name = str(element.function_args)
-                        element.function_args = element.function_args.replace(name, 'answers[bot.message.chat_id]'
+                        element.function_args = element.function_args.replace(name, 'answers'
                                                                                     '[\"' + str(name) + '\"]')
                     element.function_args = element.function_args.replace('answers', 'answers[bot.message.chat_id]')
             template = template.replace('%function_args%', element.function_args)
