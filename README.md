@@ -20,6 +20,7 @@ Contents:
         - [Functions block](#functions-block)
         - [File block](#file-block)
     - [Generating bot code](#generating-bot-code)  
+    - [Use cases](#use-cases)
 - [Custom classes](#custom-classes)
     - [Arrow](#arrow)
     - [Start](#start)
@@ -121,6 +122,9 @@ Your bot will be saved to **bots** path. To run it use the following command:
 ```
 python path_to_your_bot_file
 ```
+## Use cases
+[Support bot based on your github readme.md](https://denis-tsitko.medium.com/support-telegram-bot-for-github-project-bb1a70a21628)  
+[Library bot which will send random book of given genre to user](https://denis-tsitko.medium.com/library-telegram-bot-f7d2165ed5e3)  
 
 # Custom classes
 ## Arrow
