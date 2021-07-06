@@ -4,7 +4,9 @@ contacts: denis.tsitko@gmail.com
 
 [support bot](https://t.me/drawyourbot_support_bot)  
 
-[project blog](https://denis-tsitko.medium.com/)
+[project blog](https://denis-tsitko.medium.com/)  
+
+[project demo video](https://youtu.be/P1s8u1vjJ0c)
 
 ![project demo](project_demo.gif)
 
